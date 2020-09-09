@@ -15,25 +15,32 @@
         :rules="rules"
       >
         <el-form-item prop="username">
+
           <el-input
             v-model="form.username"
             placeholder="用户名"
             prefix-icon="iconfont icon-user"
           ></el-input>
+
         </el-form-item>
 
         <el-form-item prop="password">
+
           <el-input
             v-model="form.password"
             type="password"
             placeholder="密码"
             prefix-icon="iconfont icon-3702mima"
           ></el-input>
+
         </el-form-item>
 
         <el-form-item class="but">
+
           <el-button type="primary" @click="login">登录</el-button>
+
           <el-button type="info" @click="reset">重置</el-button>
+
         </el-form-item>
       </el-form>
     </div>
@@ -51,6 +58,7 @@ export default {
       },
       // 表单的验证规则
       rules: {
+        // 使用————在需要使用的输入框的 el-form-item 标签里加上 prop=“ ”
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 3, max: 20, message: '长度在 3 到 20 个字符', trigger: 'blur' }
@@ -64,6 +72,7 @@ export default {
   },
   methods: {
     reset() {
+      // 清空输入框中的内容  resetFields() 为Element UI提供的 方法
       this.$refs.LoginFormRef.resetFields()
       // this为当前的表单对象
     },
