@@ -68,7 +68,9 @@ export default {
       // this为当前的表单对象
     },
     login() {
-      this.$refs.LoginFormRef.validate(async valid => {
+      this.$refs.LoginFormRef.validate(async (valid) => {
+        //  validate()   对 整个表单进行校验的方法，参数为一个回调函数
+        // valid 为一个布尔类型  true 为验证成功  false 为失败
         if (!valid) return
         const { data } = await this.$http.post('login', this.form)
         if (data.meta.status !== 200) return this.$massage.error('登录失败')

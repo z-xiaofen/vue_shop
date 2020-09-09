@@ -1,7 +1,7 @@
 <template>
   <div>
      <el-button type="info" plain @click="out">退出</el-button>
-     <el-button type="info" plain @click="out">退出</el-button>
+     
   </div>
 </template>
 
