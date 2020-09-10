@@ -37,7 +37,7 @@
 
         <el-form-item class="but">
 
-          <el-button type="primary" @click="login">登录</el-button>
+          <el-button type="primary" @click="login" @keyup.enter.native="login">登录</el-button>
 
           <el-button type="info" @click="reset">重置</el-button>
 
@@ -53,8 +53,8 @@ export default {
     return {
       // 登录表单的数据绑定对象
       form: {
-        username: '',
-        password: ''
+        username: 'admin',
+        password: '123456'
       },
       // 表单的验证规则
       rules: {
