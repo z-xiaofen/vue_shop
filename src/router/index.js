@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '../components/Login.vue'
 import Home from '../components/Home.vue'
 import Wel from '../components/welcome.vue'
+import Users from '../components/user/users.vue'
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -17,7 +18,8 @@ const router = new VueRouter({
         component: Home,
         redirect: '/welcome',
         children: [
-            { path: '/welcome', component: Wel }
+            { path: '/welcome', component: Wel },
+            { path: '/users', component: Users }
         ]
     }]
 })

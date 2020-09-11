@@ -21,10 +21,13 @@
           :unique-opened="true"
           :collapse="isCollapse"
           :collapse-transition="false"
+          :router="true"
+          :default-active="activePath"
         >
         <!--:collapse-transition="false" 取消动画
             :unique-opened="true"   是否只保持一个子菜单的展开
             :collapse="isCollapse"  是否水平折叠收起菜单（仅在 mode 为 vertical 时可用）
+            :router="true" 开启路由模式是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转
          -->
           <el-submenu :index="item.id + ''" v-for="item in menulist" :key="item.id">
             <!-- 一级菜单 -->
@@ -33,7 +36,7 @@
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item :index="info.id+''" v-for="info in item.children" :key="info.id">
+            <el-menu-item :index="'/' + item.path" v-for="info in item.children" :key="info.id" @click="sevePath('/' + item.path)">
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{info.authName}}</span>
@@ -66,7 +69,8 @@ export default {
         145: 'iconfont icon-baobiao',
         101: 'iconfont icon-shangpin'
       },
-      isCollapse: false
+      isCollapse: false,
+      activePath: ''
     };
   },
   watch: {},
@@ -74,6 +78,7 @@ export default {
   created () {
     // created() 为vue钩子函数
     this.getMenulist()
+    this.activePath = window.sessionStorage.getItem('activePath')
   },
   methods: {
     // 登出
@@ -91,7 +96,13 @@ export default {
     // 侧边栏的折叠与展开
     toggleColl() {
      this.isCollapse = !this.isCollapse
+    },
+    // 将当前的路由地址添加到sessionStorage里
+    sevePath(active) {
+       window.sessionStorage.setItem('activePath', active)
+       this.activePath = active
     }
+
   },
   mounted () {}
 };
