@@ -22,9 +22,10 @@ import {
     Switch,
     Tooltip,
     Pagination,
-    Dialog
+    Dialog,
+    MessageBox
 } from 'element-ui'
-
+// 按需导入Element UI
 
 Vue.use(Button)
 Vue.use(FormItem)
@@ -61,3 +62,4 @@ Vue.use(Dialog)
 
 // 全局挂载
 Vue.prototype.$massage = Message
+Vue.prototype.$confirm = MessageBox.confirm

@@ -2,8 +2,8 @@
   <el-container class="home-con">
     <el-header>
       <div>
-        <img src="../assets/u=3593993928,3717017110&fm=26&gp=0.jpg" alt="" />
-        <span>你饿吗？后台管理系统</span>
+        <img src="../assets/u=442259188,2581418443&fm=26&gp=0.jpg" alt="字节跳动" title="你关心的才是头条" />
+        <span>字节跳动后台管理系统</span>
       </div>
       <el-button type="info" plain @click="out">退出</el-button>
     </el-header>
@@ -112,7 +112,7 @@ export default {
   height: 100%;
 }
 .el-header {
-  background-color: #363d40;
+  background-color: #282c34;
   display: flex;
   justify-content: space-between;
   align-items: center;

@@ -12,6 +12,7 @@
       <el-row :gutter="20">
         <!-- :gutter="20" 列的间距 -->
         <el-col :span="8">
+          <!-- span   栅格系统 屏幕划分为24份 span定义每份的大小 -->
           <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="queryUserList">
             <el-button slot="append" icon="el-icon-search" @click="queryUserList"></el-button>
           </el-input>
@@ -22,6 +23,7 @@
       </el-row>
       <!-- 用户列表 -->
       <el-table :data="userList" stripe border style="width: 100%">
+        <!-- :data="userList"绑定数据对象  -->
         <el-table-column type="index" label="#"> </el-table-column>
         <el-table-column prop="username" label="用户名"> </el-table-column>
         <el-table-column prop="email" label="邮箱"> </el-table-column>
@@ -45,7 +47,7 @@
               type="danger"
               icon="el-icon-delete"
               size="mini"
-              @click="deleteUser(scope.row.id)"
+              @click="removeUserById(scope.row.id)"
             ></el-button>
             <el-tooltip
               effect="dark"
@@ -239,7 +241,7 @@ export default {
       }
       this.$massage.success('用户状态修改成功！')
     },
-    // 监听对话框的关闭事件
+    // 监听对话框的关闭事件 清空数据
     addDialogCls() {
       this.$refs.addUsersForm.resetFields()
     },
@@ -279,7 +281,24 @@ export default {
       this.queryUserList()
       })
     },
-    // 删除用户
+       // 删除用户
+   async removeUserById(id) {
+     // 弹框询问
+    const confirmRes = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).catch(err => {
+          return err
+        })
+        // 如果用户确认删除 返回 值为字符串 --> confirm
+        // 如果用户取消删除 返回 值为字符串 --> cancel
+        if (confirmRes !== 'confirm') return this.$massage.info('取消了删除操作')
+        const { data: res } = await this.$http.delete('users/' + id)
+        if (res.meta.status !== 200) return this.$massage.error('用户删除失败')
+        this.$massage.success('用户删除成功')
+        this.queryUserList()
+   },
    async deleteUser(id) {
       const { data: res } = await this.$http.delete('users/' + id)
       if (res.meta.status !== 200) return this.$massage.error('用户删除失败')
