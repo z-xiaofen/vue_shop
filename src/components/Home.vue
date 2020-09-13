@@ -36,7 +36,7 @@
               <span>{{item.authName}}</span>
             </template>
             <!-- 二级菜单 -->
-            <el-menu-item :index="'/' + item.path" v-for="info in item.children" :key="info.id" @click="sevePath('/' + item.path)">
+            <el-menu-item :index="'/' + info.path" v-for="info in item.children" :key="info.id" @click="sevePath('/' + info.path)">
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{info.authName}}</span>
