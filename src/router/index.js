@@ -26,7 +26,7 @@ const router = new VueRouter({
 
 // 挂载路由导航守望
 router.beforeEach((to, from, next) => {
-    // to 将要访问
+    // to  将要访问
     // from 从哪个路径跳转而来
     // next 为一个函数  表示 放行
     //   next() 放行
