@@ -23,7 +23,8 @@ import {
     Tooltip,
     Pagination,
     Dialog,
-    MessageBox
+    MessageBox,
+    Tag
 } from 'element-ui'
 // 按需导入Element UI
 
@@ -59,6 +60,7 @@ Vue.use(Pagination)
 
 // 对话框
 Vue.use(Dialog)
+Vue.use(Tag)
 
 // 全局挂载
 Vue.prototype.$massage = Message

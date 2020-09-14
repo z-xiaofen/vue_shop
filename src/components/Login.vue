@@ -86,6 +86,7 @@ export default {
         this.$massage.success('登录成功')
         //  将登录成功的token 保存在客户端的sessionStorage里
         window.sessionStorage.setItem('token', data.data.token)
+        window.sessionStorage.setItem('username', data.data.username)
         this.$router.push('/home')
       })
     }

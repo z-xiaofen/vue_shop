@@ -37,6 +37,8 @@
             </template>
             <!-- 二级菜单 -->
             <el-menu-item :index="'/' + info.path" v-for="info in item.children" :key="info.id" @click="sevePath('/' + info.path)">
+            <!-- el-menu-item 里面的 :index 为 路由地址 与 router-link 的:to 一样 -->
+            <!-- @click="sevePath('/' + info.path) 函数将 当前的路由地址存储在 sessionStorage 中 -->
               <template slot="title">
                 <i class="el-icon-menu"></i>
                 <span>{{info.authName}}</span>
@@ -117,6 +119,7 @@ export default {
   justify-content: space-between;
   align-items: center;
   padding-left: 8px;
+  font-size: 20px;
   > div {
     height: 100%;
     display: flex;
@@ -128,7 +131,6 @@ export default {
     }
     span {
       padding-left: 20px;
-      font-size: 20px;
       color: #e9edf1;
     }
   }
