@@ -24,7 +24,8 @@ import {
     Pagination,
     Dialog,
     MessageBox,
-    Tag
+    Tag,
+    Tree
 } from 'element-ui'
 // 按需导入Element UI
 
@@ -61,6 +62,7 @@ Vue.use(Pagination)
 // 对话框
 Vue.use(Dialog)
 Vue.use(Tag)
+Vue.use(Tree)
 
 // 全局挂载
 Vue.prototype.$massage = Message
