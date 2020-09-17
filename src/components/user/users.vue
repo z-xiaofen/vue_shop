@@ -13,12 +13,23 @@
         <!-- :gutter="20" 列的间距 -->
         <el-col :span="8">
           <!-- span   栅格系统 屏幕划分为24份 span定义每份的大小 -->
-          <el-input placeholder="请输入内容" v-model="queryInfo.query" clearable @clear="queryUserList">
-            <el-button slot="append" icon="el-icon-search" @click="queryUserList"></el-button>
+          <el-input
+            placeholder="请输入内容"
+            v-model="queryInfo.query"
+            clearable
+            @clear="queryUserList"
+          >
+            <el-button
+              slot="append"
+              icon="el-icon-search"
+              @click="queryUserList"
+            ></el-button>
           </el-input>
         </el-col>
         <el-col :span="4">
-          <el-button type="primary" @click="adddialogVisible=true">添加用户</el-button>
+          <el-button type="primary" @click="adddialogVisible = true"
+            >添加用户</el-button
+          >
         </el-col>
       </el-row>
       <!-- 用户列表 -->
@@ -32,7 +43,11 @@
         <el-table-column label="状态">
           <template slot-scope="scope">
             <!-- scope.row 为当前这一列的数据  为一个对象 {username,email,mobile.......} -->
-            <el-switch v-model="scope.row.mg_state" @change="userStateChange(scope.row)"> </el-switch>
+            <el-switch
+              v-model="scope.row.mg_state"
+              @change="userStateChange(scope.row)"
+            >
+            </el-switch>
           </template>
         </el-table-column>
         <el-table-column label="操作" width="180">
@@ -59,6 +74,7 @@
                 type="warning"
                 icon="el-icon-setting"
                 size="mini"
+                @click="setRoles(scope.row)"
               ></el-button>
             </el-tooltip>
           </template>
@@ -78,34 +94,48 @@
     </el-card>
     <!-- 添加用户对话框 -->
     <el-dialog
-        title="添加用户"
-        :visible.sync="adddialogVisible"
-        width="50%" @close="addDialogCls">
-        <el-form :model="addForm" :rules="rules" ref="addUsersForm" label-width="70px">
-          <el-form-item label="用户名" prop="username">
+      title="添加用户"
+      :visible.sync="adddialogVisible"
+      width="50%"
+      @close="addDialogCls"
+    >
+      <el-form
+        :model="addForm"
+        :rules="rules"
+        ref="addUsersForm"
+        label-width="70px"
+      >
+        <el-form-item label="用户名" prop="username">
           <el-input v-model="addForm.username"></el-input>
-          </el-form-item>
-          <el-form-item label="密码" prop="password">
+        </el-form-item>
+        <el-form-item label="密码" prop="password">
           <el-input v-model="addForm.password"></el-input>
-          </el-form-item>
-          <el-form-item label="邮箱" prop="email">
+        </el-form-item>
+        <el-form-item label="邮箱" prop="email">
           <el-input v-model="addForm.email"></el-input>
-          </el-form-item>
-          <el-form-item label="手机" prop="mobile">
+        </el-form-item>
+        <el-form-item label="手机" prop="mobile">
           <el-input v-model="addForm.mobile"></el-input>
-          </el-form-item>
-        </el-form>
-        <span slot="footer">
+        </el-form-item>
+      </el-form>
+      <span slot="footer">
         <el-button @click="adddialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="addUser">确 定</el-button>
-        </span>
+      </span>
     </el-dialog>
     <!-- 编辑用户信息对话框 -->
     <el-dialog
       title="编辑用户信息"
       :visible.sync="editdialogVisible"
-      width="50%" @close="editDialogCls">
-      <el-form :model="editForm" :rules="editrules" ref="editUsersForm" label-width="70px">
+      width="50%"
+      @close="editDialogCls"
+    >
+      <el-form
+        :model="editForm"
+        :rules="editrules"
+        ref="editUsersForm"
+        label-width="70px"
+      >
         <el-form-item label="用户名">
           <el-input v-model="editForm.username" :disabled="true"></el-input>
         </el-form-item>
@@ -121,6 +151,35 @@
         <el-button type="primary" @click="editUser">确 定</el-button>
       </span>
     </el-dialog>
+    <!-- 分配角色对话框 -->
+    <el-dialog
+      title="分配角色"
+      :visible.sync="setRolesdialogVisible"
+      width="50%"
+      @close="setRolesDialogCls"
+    >
+      <div>
+        <p>当前用户：{{ this.usersInfo.username }}</p>
+        <p>当前角色：{{ this.usersInfo.role_name }}</p>
+        <!-- 选择器 -->
+        新分配角色：
+        <el-select v-model="RolesId" placeholder="请选择">
+          <el-option
+            v-for="item in rolesList"
+            :key="item.id"
+            :label="item.roleName"
+            :value="item.id"
+          >
+          </el-option>
+        </el-select>
+      </div>
+      <span slot="footer">
+        <el-button @click="setRolesdialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="setNewRoles"
+          >确 定</el-button
+        >
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -130,21 +189,21 @@ export default {
   props: {},
   data() {
     // 验证邮箱地址的规则
-     var checkEmail = (rule, value, callback) => {
-        const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
-        if (regEmail.test(value)) {
-          return callback()
-        }
-        callback(new Error('请输入合法的邮箱'))
-      };
+    var checkEmail = (rule, value, callback) => {
+      const regEmail = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+(\.[a-zA-Z0-9_-])+/
+      if (regEmail.test(value)) {
+        return callback()
+      }
+      callback(new Error('请输入合法的邮箱'))
+    }
     // 验证手机号的规则
     var checkMobile = (rule, value, callback) => {
-       const regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
-        if (regMobile.test(value)) {
-          return callback()
-        }
-        callback(new Error('请输入合法的手机号码'))
-      };
+      const regMobile = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/
+      if (regMobile.test(value)) {
+        return callback()
+      }
+      callback(new Error('请输入合法的手机号码'))
+    }
     return {
       queryInfo: {
         query: '',
@@ -155,8 +214,13 @@ export default {
       },
       userList: [],
       total: 0,
-      adddialogVisible: false,
-      editdialogVisible: false,
+      // 对话框的状态
+      adddialogVisible: false, // 添加用户
+      editdialogVisible: false, // 编辑用户
+      setRolesdialogVisible: false, // 分配角色
+      usersInfo: {}, // 当前用户的数据
+      RolesId: '', // 重新分配的角色的id
+      rolesList: [], // 获取的角色列表
       // 添加用户表单数据
       addForm: {
         username: '',
@@ -164,11 +228,10 @@ export default {
         email: '',
         mobile: ''
       },
-      editForm: {
-      },
+      editForm: {},
       // 添加表单验证规则
       rules: {
-         // 使用————在需要使用的输入框的 el-form-item 标签里加上 prop=“ ”
+        // 使用————在需要使用的输入框的 el-form-item 标签里加上 prop=“ ”
         username: [
           { required: true, message: '请输入用户名', trigger: 'blur' },
           { min: 2, max: 20, message: '长度在 2 到 20 个字符', trigger: 'blur' }
@@ -179,21 +242,21 @@ export default {
         ],
         email: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-           { validator: checkEmail, trigger: 'blur' }
+          { validator: checkEmail, trigger: 'blur' }
         ],
-         mobile: [
+        mobile: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-           { validator: checkMobile, trigger: 'blur' }
+          { validator: checkMobile, trigger: 'blur' }
         ]
       },
       editrules: {
         email: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-           { validator: checkEmail, trigger: 'blur' }
+          { validator: checkEmail, trigger: 'blur' }
         ],
-         mobile: [
+        mobile: [
           { required: true, message: '请输入密码', trigger: 'blur' },
-           { validator: checkMobile, trigger: 'blur' }
+          { validator: checkMobile, trigger: 'blur' }
         ]
       }
     }
@@ -227,15 +290,17 @@ export default {
     },
     handleSizeChange(newSize) {
       this.queryInfo.pagesize = newSize
-      this.queryUserList()//  在更改了queryinfo里面的数据后要重新获取用户列表
+      this.queryUserList() //  在更改了queryinfo里面的数据后要重新获取用户列表
     },
     handleCurrentChange(newPage) {
       this.queryInfo.pagenum = newPage
       this.queryUserList()
     },
-   async userStateChange(userinfo) {
-        const { data: res } = await this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
-        if (res.meta.status !== 200) {
+    async userStateChange(userinfo) {
+      const { data: res } = await this.$http.put(
+        `users/${userinfo.id}/state/${userinfo.mg_state}`
+      )
+      if (res.meta.status !== 200) {
         userinfo.mg_state = !userinfo.mg_state
         return this.$massage.error('用户状态修改失败！')
       }
@@ -248,62 +313,95 @@ export default {
     editDialogCls() {
       this.$refs.editUsersForm.resetFields()
     },
+    setRolesDialogCls() {
+      this.RolesId = ''
+    },
     // 添加用户
     addUser() {
-      this.$refs.addUsersForm.validate(async (valid) => {
+      this.$refs.addUsersForm.validate(async valid => {
         if (!valid) return
-      const { data: res } = await this.$http.post('users', this.addForm)
+        const { data: res } = await this.$http.post('users', this.addForm)
         if (res.meta.status !== 201) {
-        return this.$massage.error('添加用户失败')
-      }
-      this.$massage.success('添加用户成功')
-      this.adddialogVisible = false
-      this.queryUserList()
+          return this.$massage.error('添加用户失败')
+        }
+        this.$massage.success('添加用户成功')
+        this.adddialogVisible = false
+        this.queryUserList()
       })
     },
     // 展示编辑用户的对话框
-   async showEditDialog(id) {
-     const { data: res } = await this.$http.get('users/' + id)
-      if (res.meta.status !== 200) return this.$massage.error('查询用户信息失败')
+    async showEditDialog(id) {
+      const { data: res } = await this.$http.get('users/' + id)
+      if (res.meta.status !== 200) {
+        return this.$massage.error('查询用户信息失败')
+      }
       this.editForm = res.data
       this.editdialogVisible = true
     },
     // 编辑用户
     editUser() {
-      this.$refs.editUsersForm.validate(async (valid) => {
+      this.$refs.editUsersForm.validate(async valid => {
         if (!valid) return
-      const { data: res } = await this.$http.put('users/' + this.editForm.id, { email: this.editForm.email, mobile: this.editForm.mobile })
+        const { data: res } = await this.$http.put(
+          'users/' + this.editForm.id,
+          { email: this.editForm.email, mobile: this.editForm.mobile }
+        )
         if (res.meta.status !== 200) {
-        return this.$massage.error('修改用户信息失败')
-      }
-      this.$massage.success('修改用户信息成功')
-      this.editdialogVisible = false
-      this.queryUserList()
+          return this.$massage.error('修改用户信息失败')
+        }
+        this.$massage.success('修改用户信息成功')
+        this.editdialogVisible = false
+        this.queryUserList()
       })
     },
-       // 删除用户
-   async removeUserById(id) {
-     // 弹框询问
-    const confirmRes = await this.$confirm('此操作将永久删除该用户, 是否继续?', '提示', {
+    // 删除用户
+    async removeUserById(id) {
+      // 弹框询问
+      const confirmRes = await this.$confirm(
+        '此操作将永久删除该用户, 是否继续?',
+        '提示',
+        {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
-        }).catch(err => {
-          return err
-        })
-        // 如果用户确认删除 返回 值为字符串 --> confirm
-        // 如果用户取消删除 返回 值为字符串 --> cancel
-        if (confirmRes !== 'confirm') return this.$massage.info('取消了删除操作')
-        const { data: res } = await this.$http.delete('users/' + id)
-        if (res.meta.status !== 200) return this.$massage.error('用户删除失败')
-        this.$massage.success('用户删除成功')
-        this.queryUserList()
-   },
-   async deleteUser(id) {
+        }
+      ).catch(err => {
+        return err
+      })
+      // 如果用户确认删除 返回 值为字符串 --> confirm
+      // 如果用户取消删除 返回 值为字符串 --> cancel
+      if (confirmRes !== 'confirm') return this.$massage.info('取消了删除操作')
       const { data: res } = await this.$http.delete('users/' + id)
       if (res.meta.status !== 200) return this.$massage.error('用户删除失败')
       this.$massage.success('用户删除成功')
       this.queryUserList()
+    },
+    async deleteUser(id) {
+      const { data: res } = await this.$http.delete('users/' + id)
+      if (res.meta.status !== 200) return this.$massage.error('用户删除失败')
+      this.$massage.success('用户删除成功')
+      this.queryUserList()
+    },
+   async setRoles(usersInfo) {
+      this.usersInfo = usersInfo
+      const { data: res } = await this.$http.get('roles')
+      if (res.meta.status !== 200) {
+        return this.$massage.error('角色列表获取失败！')
+      }
+      this.rolesList = res.data
+      this.setRolesdialogVisible = true
+    },
+   async setNewRoles() {
+      const { data: res } = await this.$http.put(`users/${this.usersInfo.id}/role`, {
+        rid: this.RolesId
+      })
+      if (res.meta.status !== 200) {
+        console.log(this.RolesId);
+        return this.$massage.error('新分配角色失败')
+      }
+      this.$massage.success('新分配角色成功')
+      this.queryUserList()
+      this.setRolesdialogVisible = false
     }
   },
   mounted() {}

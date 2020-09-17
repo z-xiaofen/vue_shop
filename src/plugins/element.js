@@ -25,7 +25,9 @@ import {
     Dialog,
     MessageBox,
     Tag,
-    Tree
+    Tree,
+    Select,
+    Option
 } from 'element-ui'
 // 按需导入Element UI
 
@@ -63,6 +65,8 @@ Vue.use(Pagination)
 Vue.use(Dialog)
 Vue.use(Tag)
 Vue.use(Tree)
+Vue.use(Select)
+Vue.use(Option)
 
 // 全局挂载
 Vue.prototype.$massage = Message

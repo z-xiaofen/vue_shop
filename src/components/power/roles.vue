@@ -157,6 +157,7 @@
     >
      <el-tree :data="setRolesList" :props="defaultProps" default-expand-all
      show-checkbox node-key='id' :default-checked-keys="rolseListKeys"  ref="setRolesRef"></el-tree>
+     <!-- :default-checked-keys="rolseListKeys" 默认选中的节点  rolseListKeys为一个数组 -->
       <span slot="footer" class="dialog-footer">
         <el-button @click="setRolesdialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="allotRights">确 定</el-button>
@@ -314,6 +315,7 @@ export default {
       )
       if (res.meta.status !== 200) return this.$massage.error('角色删除失败')
       this.$massage.success('角色删除成功')
+      // 将服务器返回的最新数据 data 赋值给 roles.children (基于Vue的数据双向绑定)
       roles.children = res.data
     },
     // 分配权限
@@ -339,13 +341,14 @@ export default {
     },
      // 点击为角色分配权限
    async allotRights() {
+    //  所有被选中的三级权限的id  与半选中的 一级，二级权限的id
       const keys = [
         ...this.$refs.setRolesRef.getCheckedKeys(),
         // 若节点可被选择（即 show-checkbox 为 true），则返回目前被选中的节点所组成的数组
         ...this.$refs.setRolesRef.getHalfCheckedKeys()
         // 若节点可被选择（即 show-checkbox 为 true），则返回目前半选中的节点所组成的数组
       ]
-      const idStr = keys.join(',')
+      const idStr = keys.join(',')// 将数组转成字符串 之间用','隔开
       const { data: res } = await this.$http.post(
         `roles/${this.roleId}/rights`,
         { rids: idStr }
