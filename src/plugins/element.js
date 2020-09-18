@@ -27,7 +27,8 @@ import {
     Tag,
     Tree,
     Select,
-    Option
+    Option,
+    Cascader
 } from 'element-ui'
 // 按需导入Element UI
 
@@ -67,6 +68,9 @@ Vue.use(Tag)
 Vue.use(Tree)
 Vue.use(Select)
 Vue.use(Option)
+
+// 级联选择器
+Vue.use(Cascader)
 
 // 全局挂载
 Vue.prototype.$massage = Message

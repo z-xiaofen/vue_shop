@@ -8,6 +8,9 @@ import './assets/css/global.css'
 // 引入 阿里妈妈 字体图标
 import './assets/fonts/iconfont.css'
 import axios from 'axios'
+// 引入 vue-table-with-tree-grid
+import ZkTable from 'vue-table-with-tree-grid'
+
 
 Vue.config.productionTip = false
     // 配置请求的根路径
@@ -18,7 +21,10 @@ axios.interceptors.request.use(config => {
             // 一定在最后 return config
         return config
     })
-    // 将 axios 挂载到 vue 全局  命名为 $http
+    // 将ZkTable 注册成为全局可用的组件
+Vue.component('tree-table', ZkTable)
+
+// 将 axios 挂载到 vue 全局  命名为 $http
 Vue.prototype.$http = axios
 new Vue({
     router,
