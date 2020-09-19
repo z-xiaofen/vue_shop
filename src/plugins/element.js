@@ -28,7 +28,10 @@ import {
     Tree,
     Select,
     Option,
-    Cascader
+    Cascader,
+    Alert,
+    Tabs,
+    TabPane
 } from 'element-ui'
 // 按需导入Element UI
 
@@ -71,6 +74,11 @@ Vue.use(Option)
 
 // 级联选择器
 Vue.use(Cascader)
+    // Alert
+Vue.use(Alert)
+Vue.use(Tabs)
+Vue.use(TabPane)
+
 
 // 全局挂载
 Vue.prototype.$massage = Message
