@@ -29,12 +29,12 @@
       >
         <!-- columns 定义在data里面 用来设置表格中的 列属性 -->
         <!-- 是否有效 -->
-        <template slot="isok" scope="scope">
+        <template slot="isok" slot-scope="scope">
           <i class="el-icon-success" v-if="scope.row.cat_deleted === false" style="color:#16a05d"></i>
           <i class="el-icon-error" v-else style="color:#dc4e41"></i>
         </template>
          <!-- 排序 -->
-        <template slot="order" scope="scope">
+        <template slot="order" slot-scope="scope">
           <el-tag type="success" size="mini" v-if="scope.row.cat_level === 0">一级</el-tag>
           <el-tag type="warning" size="mini" v-else-if="scope.row.cat_level === 1">二级</el-tag>
           <el-tag type="danger" size="mini" v-else>三级</el-tag>
