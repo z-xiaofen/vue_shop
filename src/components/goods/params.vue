@@ -30,27 +30,27 @@
       <el-tabs v-model="activeName" @tab-click="handleClick">
         <!-- 添加动态参数的面板 -->
         <el-tab-pane label="动态参数" name="many">
-          <el-button type="primary" size="mini" :disabled="isDisable"
+          <el-button type="primary" size="mini" :disabled="isDisable" @click="ParamsDialog"
             >添加参数</el-button
           >
           <el-table :data="mangTableData" stripe border style="width: 100%">
             <el-table-column type="expand"></el-table-column>
             <el-table-column type="index" label="#"> </el-table-column>
-            <el-table-column prop="attr_name" label="角色名称"></el-table-column>
+            <el-table-column prop="attr_name" label="动态参数名称"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
               <el-button
                 icon="el-icon-edit"
                 type="primary"
                 size="mini"
-                @click="queryRoles(scope.row.id)"
+                @click="showEditDialog(scope.row.attr_id)"
                 >编辑</el-button
               >
               <el-button
                 icon="el-icon-delete"
                 type="danger"
                 size="mini"
-                @click="removeRoles(scope.row.id)"
+                @click="deleteParams(scope.row.attr_id)"
                 >删除</el-button
               >
             </template>
@@ -59,27 +59,27 @@
         </el-tab-pane>
         <!-- 添加静态属性的面板 -->
         <el-tab-pane label="静态属性" name="only">
-          <el-button type="primary" size="mini" :disabled="isDisable"
+          <el-button type="primary" size="mini" :disabled="isDisable"  @click="ParamsDialog"
             >添加属性</el-button
           >
           <el-table :data="onlyTableData" stripe border style="width: 100%">
             <el-table-column type="expand"></el-table-column>
             <el-table-column type="index" label="#"> </el-table-column>
-            <el-table-column prop="attr_name" label="角色名称"></el-table-column>
+            <el-table-column prop="attr_name" label="静态属性名称"></el-table-column>
             <el-table-column label="操作">
               <template slot-scope="scope">
               <el-button
                 icon="el-icon-edit"
                 type="primary"
                 size="mini"
-                @click="queryRoles(scope.row.id)"
+                @click="showEditDialog(scope.row.attr_id)"
                 >编辑</el-button
               >
               <el-button
                 icon="el-icon-delete"
                 type="danger"
                 size="mini"
-                @click="removeRoles(scope.row.id)"
+                @click="deleteParams(scope.row.attr_id)"
                 >删除</el-button
               >
             </template>
@@ -88,6 +88,48 @@
         </el-tab-pane>
       </el-tabs>
     </el-card>
+    <!-- 添加动态参数和静态属性的共用对话框 -->
+    <el-dialog
+      :title="'添加' + dialogText"
+      :visible.sync="addialogVisible"
+      width="50%"
+      @close="addCateDialogCls">
+     <el-form
+        :model="addForm"
+        :rules="addFormRules"
+        ref="addFormRef"
+        label-width="100px"
+      >
+        <el-form-item :label="dialogText" prop="attr_name">
+          <el-input v-model="addForm.attr_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="addialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="addParams">确 定</el-button>
+      </span>
+    </el-dialog>
+    <!-- 修改 -->
+    <el-dialog
+      :title="'编辑' + dialogText"
+      :visible.sync="editialogVisible"
+      width="50%"
+      @close="editCateDialogCls">
+     <el-form
+        :model="editForm"
+        :rules="addFormRules"
+        ref="ediFormRules"
+        label-width="100px"
+      >
+        <el-form-item :label="dialogText" prop="attr_name">
+          <el-input v-model="editForm.attr_name"></el-input>
+        </el-form-item>
+      </el-form>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="editialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="editParams">确 定</el-button>
+      </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -109,8 +151,21 @@ export default {
       },
       activeName: 'many',
       mangTableData: [],
-      onlyTableData: []
-
+      onlyTableData: [],
+      // 添加动态参数和静态属性的共用对话框
+      addialogVisible: false,
+      addForm: {
+        attr_name: ''
+      },
+      addFormRules: {
+         attr_name: [
+          { required: true, message: '请输入名称', trigger: 'blur' },
+          { min: 2, max: 12, message: '长度在 2 到 12 个字符', trigger: 'blur' }
+        ]
+      },
+      // 编辑动态参数和静态属性
+      editialogVisible: false,
+      editForm: {}
     }
   },
   watch: {},
@@ -127,6 +182,13 @@ export default {
         return this.cateKeys[2]
       }
       return null
+    },
+    dialogText() {
+      if (this.activeName === 'many') {
+        return '动态参数'
+      } else {
+        return '静态属性'
+      }
     }
   },
   methods: {
@@ -161,6 +223,81 @@ export default {
       }
     },
     handleClick() {
+      this.handleChange()
+    },
+    // 添加动态参数和静态属性的共用对话框
+    addCateDialogCls() {
+      this.$refs.addFormRef.resetFields()
+    },
+    ParamsDialog() {
+      this.addialogVisible = true
+    },
+    addParams() {
+      this.$refs.addFormRef.validate(async valid => {
+        if (!valid) return
+        const { data: res } = await this.$http.post(`categories/${this.cateId}/attributes`, {
+          attr_name: this.addForm.attr_name,
+          attr_sel: this.activeName
+        })
+        if (res.meta.status !== 201) {
+          return this.$massage.error('添加失败')
+        }
+        this.$massage.success('添加成功')
+        this.addialogVisible = false
+        this.handleChange()
+      })
+    },
+    // 编辑动态参数和静态属性
+    editCateDialogCls() {
+      this.$refs.ediFormRules.resetFields()
+    },
+   async showEditDialog(id) {
+     const { data: res } = await this.$http.get(`categories/${this.cateId}/attributes/${id}`, {
+       params: {
+         attr_se: this.activeName
+       }
+     })
+    if (res.meta.status !== 200) {
+          return this.$massage.error('获取参数失败')
+        }
+    this.editForm = res.data
+    this.editialogVisible = true
+    },
+   async editParams() {
+      const { data: res } = await this.$http.put(`categories/${this.cateId}/attributes/${this.editForm.attr_id}`, {
+        attr_name: this.editForm.attr_name,
+        attr_sel: this.activeName
+      })
+      if (res.meta.status !== 200) {
+          return this.$massage.error('修改失败')
+        }
+        this.$massage.success('修改成功')
+        this.handleChange()
+        this.editialogVisible = false
+    },
+    // 删除参数
+   async deleteParams(id) {
+       const confirmRe = await this.$confirm(
+        '此操作将永久删除该属性, 是否继续?',
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).catch(err => {
+        return err
+      })
+      // 如果用户确认删除 返回 值为字符串 --> confirm
+      // 如果用户取消删除 返回 值为字符串 --> cancel
+      if (confirmRe !== 'confirm') {
+        return this.$massage.info('取消了删除操作')
+      }
+      const { data: res } = await this.$http.delete(`categories/${this.cateId}/attributes/${id}`)
+      if (res.meta.status !== 200) {
+        return this.$massage.error('分类属性失败')
+      }
+      this.$massage.success('分类属性成功')
       this.handleChange()
     }
   },
