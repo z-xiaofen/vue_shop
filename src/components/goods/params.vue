@@ -388,9 +388,9 @@ export default {
         `categories/${this.cateId}/attributes/${id}`
       )
       if (res.meta.status !== 200) {
-        return this.$massage.error('分类属性失败')
+        return this.$massage.error('删除属性失败')
       }
-      this.$massage.success('分类属性成功')
+      this.$massage.success('删除属性成功')
       this.handleChange()
     },
     // + tag 标签
