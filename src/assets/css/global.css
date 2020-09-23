@@ -34,3 +34,7 @@ body {
 .el-main {
     height: calc(100vh - 60px);
 }
+
+.el-steps {
+    margin: 15px 0;
+}

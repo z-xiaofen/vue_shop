@@ -31,7 +31,9 @@ import {
     Cascader,
     Alert,
     Tabs,
-    TabPane
+    TabPane,
+    Steps,
+    Step
 } from 'element-ui'
 // 按需导入Element UI
 
@@ -78,6 +80,9 @@ Vue.use(Cascader)
 Vue.use(Alert)
 Vue.use(Tabs)
 Vue.use(TabPane)
+    // Steps
+Vue.use(Steps)
+Vue.use(Step)
 
 
 // 全局挂载

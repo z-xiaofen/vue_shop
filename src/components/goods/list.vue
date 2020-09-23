@@ -100,7 +100,10 @@ export default {
       this.total = res.data.total
       this.goodsList = res.data.goods
     },
-    addGoods() {},
+    addGoods() {
+      // 添加商品页面 为一个单独的vue单文件 组件 使用链式路由进行跳转
+      this.$router.push('/goods/add')
+    },
     // 监听pagesize改变的函数
     handleSizeChange(newSize) {
       this.queryInfo.pagesize = newSize
