@@ -33,7 +33,11 @@ import {
     Tabs,
     TabPane,
     Steps,
-    Step
+    Step,
+    CheckboxGroup,
+    Checkbox,
+    Upload
+
 } from 'element-ui'
 // 按需导入Element UI
 
@@ -83,7 +87,9 @@ Vue.use(TabPane)
     // Steps
 Vue.use(Steps)
 Vue.use(Step)
-
+Vue.use(Checkbox)
+Vue.use(CheckboxGroup)
+Vue.use(Upload)
 
 // 全局挂载
 Vue.prototype.$massage = Message
