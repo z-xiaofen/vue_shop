@@ -73,7 +73,6 @@
                   :label="j"
                   v-for="(j, i) in item.attr_vals"
                   :key="i"
-                  @change="sss"
                 ></el-checkbox>
               </el-checkbox-group>
             </el-form-item>
@@ -100,7 +99,12 @@
               <el-button size="small" type="primary">点击上传</el-button>
             </el-upload>
           </el-tab-pane>
-          <el-tab-pane name="4" label="商品内容">商品内容</el-tab-pane>
+          <el-tab-pane name="4" label="商品内容">
+             <quill-editor v-model="addForm.goods_introduce">
+             </quill-editor>
+             <!-- 添加按钮 -->
+             <el-button class="btnAdd" type="primary" @click="addGoods">添加商品</el-button>
+          </el-tab-pane>
         </el-tabs>
       </el-form>
     </el-card>
@@ -112,6 +116,8 @@
 </template>
 
 <script>
+// 引入 lodash
+import _ from 'lodash'
 export default {
   components: {},
   props: {},
@@ -124,7 +130,9 @@ export default {
         goods_weight: 0,
         goods_number: 0,
         goods_cat: [],
-        pics: []
+        pics: [],
+        goods_introduce: '',
+        attrs: []
       },
       addFormRules: {
         goods_name: [
@@ -158,6 +166,8 @@ export default {
       // 上传图片
       // 上传图片的URL地址
       uploadURL: 'http://127.0.0.1:8888/api/private/v1/upload',
+      // 图片上传使用的AJAX 不是基于 axios 所以要单独为其设置
+      // header
       headerObj: {
         Authorization: window.sessionStorage.getItem('token')
       },
@@ -242,7 +252,45 @@ export default {
       // 图上传成功触发函数
       const picInfo = { pic: response.data.tmp_path }
       this.addForm.pics.push(picInfo)
-    }
+    },
+    addGoods() {
+       this.$refs.addFormRef.validate(async valid => {
+        if (!valid) {
+          return this.$massage.error('请填写必要的表单项')
+        }
+        // 执行添加的业务逻辑
+        // lodash   cloneDeep(obj)
+        const form = _.cloneDeep(this.addForm)
+        form.goods_cat = form.goods_cat.join(',')
+         // 处理动态参数
+        this.manyCateData.forEach(item => {
+          const newInfo = {
+            attr_id: item.attr_id,
+            attr_value: item.attr_vals.join(' ')
+          }
+          this.addForm.attrs.push(newInfo)
+        })
+        // 处理静态属性
+        this.onlyCateData.forEach(item => {
+          const newInfo = {
+             attr_id: item.attr_id,
+             attr_value: item.attr_vals
+              }
+          this.addForm.attrs.push(newInfo)
+        })
+        form.attrs = this.addForm.attrs
+        // 发起请求添加商品
+        // 商品的名称，必须是唯一的
+        const { data: res } = await this.$http.post('goods', form)
+
+        if (res.meta.status !== 201) {
+          return this.$massage.error('添加商品失败！')
+        }
+        this.$massage.success('添加商品成功！')
+        this.$router.push('/goods')
+        console.log(form)
+    })
+  }
   },
   created() {
     this.queryAllCateList()
@@ -256,5 +304,8 @@ export default {
 }
 .previewImg {
   width: 100%;
+}
+.btnAdd{
+  margin: 15px 0;
 }
 </style>

@@ -10,7 +10,11 @@ import './assets/fonts/iconfont.css'
 import axios from 'axios'
 // 引入 vue-table-with-tree-grid
 import ZkTable from 'vue-table-with-tree-grid'
-
+// 引入富文本编辑器
+import VueQuillEditor from 'vue-quill-editor'
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
 
 Vue.config.productionTip = false
     // 配置请求的根路径
@@ -38,7 +42,9 @@ Vue.filter('dateFormat', function(originVal) {
     return `${y}-${m}-${d} ${hh}:${mm}:${ss}`
 })
 
-// 将 axios 挂载到 vue 全局  命名为 $http
+
+Vue.use(VueQuillEditor)
+    // 将 axios 挂载到 vue 全局  命名为 $http
 Vue.prototype.$http = axios
 new Vue({
     router,
