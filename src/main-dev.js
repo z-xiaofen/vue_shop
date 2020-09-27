@@ -15,14 +15,24 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
+// 引入进度条 Nprogress
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 
 Vue.config.productionTip = false
     // 配置请求的根路径
 axios.defaults.baseURL = 'http://127.0.0.1:8888/api/private/v1/'
+    // 在 axios 的请求拦截器在 让nprogress显示  NProgress.start()
 axios.interceptors.request.use(config => {
-        // config 为请求 对象
+        NProgress.start()
+            // config 为请求 对象
         config.headers.Authorization = window.sessionStorage.getItem('token')
             // 一定在最后 return config
+        return config
+    })
+    // 在 axios 的响应拦截器在 让nprogress显示  NProgress.start()
+axios.interceptors.response.use(config => {
+        NProgress.done()
         return config
     })
     // 将ZkTable 注册成为全局可用的组件

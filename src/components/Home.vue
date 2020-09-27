@@ -9,7 +9,7 @@
     </el-header>
     <el-container>
       <!-- 侧边栏 -->
-      <el-aside :width="isCollapse ? '64px':'200px'">
+      <el-aside :width="isCollapse ? '64px' : '200px'">
         <div class="toggle" @click="toggleColl">
           |||
         </div>
@@ -24,7 +24,7 @@
           :router="true"
           :default-active="activePath"
         >
-        <!--:collapse-transition="false" 取消动画
+          <!--:collapse-transition="false" 取消动画
             :unique-opened="true"   是否只保持一个子菜单的展开
             :collapse="isCollapse"  是否水平折叠收起菜单（仅在 mode 为 vertical 时可用）
             :router="true" 开启路由模式是否使用 vue-router 的模式，启用该模式会在激活导航时以 index 作为 path 进行路由跳转
@@ -33,15 +33,15 @@
             <!-- 一级菜单 -->
             <template slot="title">
               <i :class="ico[item.id]"></i>
-              <span>{{item.authName}}</span>
+              <span>{{ item.authName }}</span>
             </template>
             <!-- 二级菜单 -->
             <el-menu-item :index="'/' + info.path" v-for="info in item.children" :key="info.id" @click="sevePath('/' + info.path)">
-            <!-- el-menu-item 里面的 :index 为 路由地址 与 router-link 的:to 一样 -->
-            <!-- @click="sevePath('/' + info.path) 函数将 当前的路由地址存储在 sessionStorage 中 -->
+              <!-- el-menu-item 里面的 :index 为 路由地址 与 router-link 的:to 一样 -->
+              <!-- @click="sevePath('/' + info.path) 函数将 当前的路由地址存储在 sessionStorage 中 -->
               <template slot="title">
                 <i class="el-icon-menu"></i>
-                <span>{{info.authName}}</span>
+                <span>{{ info.authName }}</span>
               </template>
             </el-menu-item>
           </el-submenu>
@@ -73,11 +73,11 @@ export default {
       },
       isCollapse: false,
       activePath: ''
-    };
+    }
   },
   watch: {},
   computed: {},
-  created () {
+  created() {
     // created() 为vue钩子函数
     this.getMenulist()
     this.activePath = window.sessionStorage.getItem('activePath')
@@ -92,22 +92,23 @@ export default {
     // 获取菜单
     async getMenulist() {
       const { data: res } = await this.$http.get('menus')
-      if (res.meta.status !== 200) return this.$massage.error(res.meta.msg)
+      if (res.meta.status !== 200) {
+        return this.$massage.error(res.meta.msg)
+      }
       this.menulist = res.data
     },
     // 侧边栏的折叠与展开
     toggleColl() {
-     this.isCollapse = !this.isCollapse
+      this.isCollapse = !this.isCollapse
     },
     // 将当前的路由地址添加到sessionStorage里
     sevePath(active) {
-       window.sessionStorage.setItem('activePath', active)
-       this.activePath = active
+      window.sessionStorage.setItem('activePath', active)
+      this.activePath = active
     }
-
   },
-  mounted () {}
-};
+  mounted() {}
+}
 </script>
 <style lang="less" scoped>
 .home-con {
@@ -137,17 +138,17 @@ export default {
 }
 .el-aside {
   background: #313743;
-  .el-menu{
-    border-right:none;
+  .el-menu {
+    border-right: none;
   }
 }
 .el-main {
   background-color: #e9edf1;
 }
-.iconfont{
+.iconfont {
   margin-right: 10px;
 }
-.toggle{
+.toggle {
   background-color: #475166;
   color: white;
   font-size: 10px;
