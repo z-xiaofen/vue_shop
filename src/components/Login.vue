@@ -64,7 +64,7 @@ export default {
         if (data.meta.status !== 200) {
           return this.$message.error('登录失败')
         }
-        this.$massage.success('登录成功')
+        this.$message.success('登录成功')
         //  将登录成功的token 保存在客户端的sessionStorage里
         window.sessionStorage.setItem('token', data.data.token)
         window.sessionStorage.setItem('username', data.data.username)

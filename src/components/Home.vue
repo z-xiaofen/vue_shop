@@ -87,13 +87,13 @@ export default {
     out() {
       window.sessionStorage.clear()
       this.$router.push('/login')
-      this.$massage.success('退出成功')
+      this.$message.success('退出成功')
     },
     // 获取菜单
     async getMenulist() {
       const { data: res } = await this.$http.get('menus')
       if (res.meta.status !== 200) {
-        return this.$massage.error(res.meta.msg)
+        return this.$message.error(res.meta.msg)
       }
       this.menulist = res.data
     },

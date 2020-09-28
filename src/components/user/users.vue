@@ -204,7 +204,7 @@ export default {
         params: this.queryInfo
       })
       if (res.meta.status !== 200) {
-        return this.$massage.error('获取用户列表失败！')
+        return this.$message.error('获取用户列表失败！')
       }
       this.userList = res.data.users
       this.total = res.data.total
@@ -214,11 +214,11 @@ export default {
         params: this.queryInfo
       })
       if (res.meta.status !== 200) {
-        return this.$massage.error('获取用户列表失败！')
+        return this.$message.error('获取用户列表失败！')
       }
       this.userList = res.data.users
       this.total = res.data.total
-      this.$massage.success('获取用户列表成功！')
+      this.$message.success('获取用户列表成功！')
     },
     handleSizeChange(newSize) {
       this.queryInfo.pagesize = newSize
@@ -232,9 +232,9 @@ export default {
       const { data: res } = await this.$http.put(`users/${userinfo.id}/state/${userinfo.mg_state}`)
       if (res.meta.status !== 200) {
         userinfo.mg_state = !userinfo.mg_state
-        return this.$massage.error('用户状态修改失败！')
+        return this.$message.error('用户状态修改失败！')
       }
-      this.$massage.success('用户状态修改成功！')
+      this.$message.success('用户状态修改成功！')
     },
     // 监听对话框的关闭事件 清空数据
     addDialogCls() {
@@ -252,9 +252,9 @@ export default {
         if (!valid) return
         const { data: res } = await this.$http.post('users', this.addForm)
         if (res.meta.status !== 201) {
-          return this.$massage.error('添加用户失败')
+          return this.$message.error('添加用户失败')
         }
-        this.$massage.success('添加用户成功')
+        this.$message.success('添加用户成功')
         this.adddialogVisible = false
         this.queryUserList()
       })
@@ -263,7 +263,7 @@ export default {
     async showEditDialog(id) {
       const { data: res } = await this.$http.get('users/' + id)
       if (res.meta.status !== 200) {
-        return this.$massage.error('查询用户信息失败')
+        return this.$message.error('查询用户信息失败')
       }
       this.editForm = res.data
       this.editdialogVisible = true
@@ -274,9 +274,9 @@ export default {
         if (!valid) return
         const { data: res } = await this.$http.put('users/' + this.editForm.id, { email: this.editForm.email, mobile: this.editForm.mobile })
         if (res.meta.status !== 200) {
-          return this.$massage.error('修改用户信息失败')
+          return this.$message.error('修改用户信息失败')
         }
-        this.$massage.success('修改用户信息成功')
+        this.$message.success('修改用户信息成功')
         this.editdialogVisible = false
         this.queryUserList()
       })
@@ -293,23 +293,23 @@ export default {
       })
       // 如果用户确认删除 返回 值为字符串 --> confirm
       // 如果用户取消删除 返回 值为字符串 --> cancel
-      if (confirmRes !== 'confirm') return this.$massage.info('取消了删除操作')
+      if (confirmRes !== 'confirm') return this.$message.info('取消了删除操作')
       const { data: res } = await this.$http.delete('users/' + id)
-      if (res.meta.status !== 200) return this.$massage.error('用户删除失败')
-      this.$massage.success('用户删除成功')
+      if (res.meta.status !== 200) return this.$message.error('用户删除失败')
+      this.$message.success('用户删除成功')
       this.queryUserList()
     },
     async deleteUser(id) {
       const { data: res } = await this.$http.delete('users/' + id)
-      if (res.meta.status !== 200) return this.$massage.error('用户删除失败')
-      this.$massage.success('用户删除成功')
+      if (res.meta.status !== 200) return this.$message.error('用户删除失败')
+      this.$message.success('用户删除成功')
       this.queryUserList()
     },
     async setRoles(usersInfo) {
       this.usersInfo = usersInfo
       const { data: res } = await this.$http.get('roles')
       if (res.meta.status !== 200) {
-        return this.$massage.error('角色列表获取失败！')
+        return this.$message.error('角色列表获取失败！')
       }
       this.rolesList = res.data
       this.setRolesdialogVisible = true
@@ -320,9 +320,9 @@ export default {
       })
       if (res.meta.status !== 200) {
         console.log(this.RolesId)
-        return this.$massage.error('新分配角色失败')
+        return this.$message.error('新分配角色失败')
       }
-      this.$massage.success('新分配角色成功')
+      this.$message.success('新分配角色成功')
       this.queryUserList()
       this.setRolesdialogVisible = false
     }

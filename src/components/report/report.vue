@@ -21,7 +21,7 @@ export default {
   props: {},
   data() {
     return {
-        option: {
+      option: {
         title: {
           text: '用户来源'
         },
@@ -57,11 +57,11 @@ export default {
   computed: {},
   methods: {},
   created() {},
- async mounted() {
+  async mounted() {
     const { data: res } = await this.$http.get('reports/type/1')
-   if (res.meta.status !== 200) {
-          return this.$massage.error('获取数据报表失败！')
-        }
+    if (res.meta.status !== 200) {
+      return this.$message.error('获取数据报表失败！')
+    }
     const result = _.merge(res.data, this.option)
     var myChart = echarts.init(document.getElementById('main'))
     myChart.setOption(result)
